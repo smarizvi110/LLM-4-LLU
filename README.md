@@ -32,7 +32,7 @@ Almost everyone in Pakistan, including those who cannot read or write or those t
 A low-literacy Pakistani user wants to fill out a government form to apply for a CNIC but needs help reading or writing.
 
 **Other Use Cases:** 
-- Helping women who cannot read understand the legal implications of their nikah names.
+- Helping women who cannot read understand the legal implications of their nikah namas.
 - Helping people learn about and apply for income support programs.
 - Improving the availability of information and the internet to those who cannot read or write.
 - Tackling education disparities.
