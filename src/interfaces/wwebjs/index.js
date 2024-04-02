@@ -1,15 +1,16 @@
 console.log("LLM-4-LLU • WhatsApp Interface")
 
 const { Client } = require('whatsapp-web.js');
+const qrcode = require('qrcode-terminal');
 
 const client = new Client();
 
-client.once('ready', () => {
+client.on('ready', () => {
     console.log('Client is ready!');
 });
 
-client.on('qr', (qr) => {
-    console.log('QR RECEIVED', qr);
+client.on('qr', qr => {
+    qrcode.generate(qr, {small: true});
 });
 
 client.initialize();
