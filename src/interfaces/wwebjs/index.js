@@ -1,4 +1,17 @@
-console.log("LLM-4-LLU • WhatsApp Interface")
+console.log("LLM-4-LLU • WhatsApp Interface");
+console.log("\nCopyright (C) 2024");
+[
+    "Amina Waheed",
+    "Danish Humair",
+    "Shabbir Kamal",
+    "Shayan Ali Hassan",
+    "Syed Muhammad Aqdas Rizvi",
+    "Umy Habiba"
+].forEach((name, index) => {
+    console.log(`- ${name}`);
+});
+console.log("\n");
+
 
 const { Client, LocalAuth } = require('whatsapp-web.js');
 const qrcode = require('qrcode-terminal');
