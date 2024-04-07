@@ -14,6 +14,7 @@ console.log("\n");
 
 const { Client, LocalAuth } = require('whatsapp-web.js');
 const qrcode = require('qrcode-terminal');
+let config = require("./config.json");
 
 let clientConfig = { authStrategy: new LocalAuth() };
 clientConfig.puppeteer = { args: ['--no-sandbox', '--disable-setuid-sandbox'] };
@@ -26,15 +27,16 @@ clientConfig.webVersionCache = {
 const client = new Client(clientConfig);
 
 client.on('ready', () => {
-    console.log('Client is ready!');
+    console.log("[!] Client is ready!");
 });
 
 client.on('qr', qr => {
+    console.log("Please scan the following QR code to authenticate:")
     qrcode.generate(qr, {small: true});
 });
 
 client.on('message_create', async msg => {
-    console.log(msg.body);
+    if ((config.whitelist.length && !config.whitelist.includes(msg.author))) return;
 });
 
 client.initialize();
