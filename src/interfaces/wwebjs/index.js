@@ -33,4 +33,8 @@ client.on('qr', qr => {
     qrcode.generate(qr, {small: true});
 });
 
+client.on('message_create', async msg => {
+    console.log(msg.body);
+});
+
 client.initialize();
