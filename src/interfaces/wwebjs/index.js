@@ -1,4 +1,4 @@
-console.log("LLM-4-LLU • WhatsApp Interface");
+console.log("LLM-4-LLU • WhatsApp Interface v0.0.1");
 console.log("\nCopyright (C) 2024");
 [
     "Amina Waheed",
@@ -36,7 +36,17 @@ client.on('qr', qr => {
 });
 
 client.on('message_create', async msg => {
-    if ((config.whitelist.length && !config.whitelist.includes(msg.author))) return;
+    sender_num = msg.author ? msg.author : msg.from;
+    sender_num = sender_num.match(/(\d+)/g)[0];
+
+    console.log("[!] Received message from " + sender_num);
+    console.log("\t- Content: " + msg.body);
+    console.log("\t- Type: " + msg.type);
+    console.log("\t- Timestamp: " + msg.timestamp);
+
+    if ((config.whitelist.length && !config.whitelist.includes(msg.sender_num))) return;
+
+    console.log("[!] Received potential message")
 });
 
 client.initialize();
