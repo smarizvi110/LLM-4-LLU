@@ -15,6 +15,7 @@ console.log("\n");
 const { Client, LocalAuth } = require('whatsapp-web.js');
 const qrcode = require('qrcode-terminal');
 let config = require("./config.json");
+let utils = require("./utils.js");
 
 let clientConfig = { authStrategy: new LocalAuth() };
 clientConfig.puppeteer = { args: ['--no-sandbox', '--disable-setuid-sandbox'] };
@@ -25,6 +26,7 @@ clientConfig.webVersionCache = {
 };
 
 const client = new Client(clientConfig);
+const bot = utils.bot;
 
 client.on('ready', () => {
     console.log("[!] Client is ready!");
@@ -47,6 +49,16 @@ client.on('message_create', async msg => {
     if ((config.whitelist.length && !config.whitelist.includes(msg.sender_num))) return;
 
     console.log("[!] Received potential message")
+
+    let modeProcedure = bot.modes.get(msg.type);
+    if (!modeProcedure) return;
+
+    console.log("[!] Mode procedure found")
+    bot.processCount++;
+    await utils.naturalDelay(bot);
+    modeProcedure.run(msg, client, bot);
+    console.log("[!] Mode procedure executed")
 });
 
+bot.loadModes();
 client.initialize();
