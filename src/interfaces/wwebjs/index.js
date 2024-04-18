@@ -48,6 +48,23 @@ client.on('message_create', async msg => {
 
     if ((config.whitelist.length && !config.whitelist.includes(msg.sender_num))) return;
 
+    if (msg.body == "!reload" && config.admins.includes(sender_num)) {
+        bot.processCount = 1;
+        delete require.cache[require.resolve("./config.json")];
+        delete require.cache[require.resolve("./utils.js")];
+        delete require.cache[require.resolve("./ai.js")];
+        config = require("./config.json");
+        utils = require("./utils.js");
+
+        await Promise.all([
+            bot.loadCommands(),
+            utils.naturalDelay(bot, 1, 2),
+            msg.react('✅')
+        ]);
+
+        return;
+    }
+
     console.log("[!] Received potential message")
 
     let modeProcedure = bot.modes.get(msg.type);
