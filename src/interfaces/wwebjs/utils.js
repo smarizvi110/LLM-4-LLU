@@ -46,8 +46,6 @@ bot.loadModes = function() {
             console.log(`[${i+1}] ${f} was discovered.`);
             bot.modes.set(props.desc.name, props);
             props.desc.aliases.forEach(name => bot.modes.set(name, props));
-            let mod = `${i+1}. *${config.prefix}${props.desc.name}* ${props.desc.args}`.trim();
-            if (!config.enabled_modes.includes("*") && !config.enabled_modes.includes(props.desc.name)) mod = `~${mod}~`;
         });
     });
 }

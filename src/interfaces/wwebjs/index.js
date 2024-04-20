@@ -46,7 +46,7 @@ client.on('message_create', async msg => {
     console.log("\t- Type: " + msg.type);
     console.log("\t- Timestamp: " + msg.timestamp);
 
-    if ((config.whitelist.length && !config.whitelist.includes(msg.sender_num))) return;
+    if ((config.whitelist.length && !config.whitelist.includes(sender_num))) return;
 
     if (msg.body == "!reload" && config.admins.includes(sender_num)) {
         bot.processCount = 1;
