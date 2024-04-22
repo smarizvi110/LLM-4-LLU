@@ -10,10 +10,12 @@ console.log("\nCopyright (C) 2024");
 ].forEach((name, index) => {
     console.log(`- ${name}`);
 });
-console.log("\n");
+console.log();
 
 const { Client, LocalAuth } = require('whatsapp-web.js');
 const qrcode = require('qrcode-terminal');
+const axios = require('axios');
+
 let config = require("./config.json");
 let utils = require("./utils.js");
 
@@ -52,12 +54,11 @@ client.on('message_create', async msg => {
         bot.processCount = 1;
         delete require.cache[require.resolve("./config.json")];
         delete require.cache[require.resolve("./utils.js")];
-        delete require.cache[require.resolve("./ai.js")];
         config = require("./config.json");
         utils = require("./utils.js");
 
         await Promise.all([
-            bot.loadCommands(),
+            bot.loadModes(),
             utils.naturalDelay(bot, 1, 2),
             msg.react('✅')
         ]);
@@ -65,16 +66,44 @@ client.on('message_create', async msg => {
         return;
     }
 
-    console.log("[!] Received potential message")
+    console.log("[!] Received potential message");
 
     let modeProcedure = bot.modes.get(msg.type);
     if (!modeProcedure) return;
 
-    console.log("[!] Mode procedure found")
+    console.log("[!] Mode procedure found");
     bot.processCount++;
     await utils.naturalDelay(bot);
-    modeProcedure.run(msg, client, bot);
-    console.log("[!] Mode procedure executed")
+    const request = modeProcedure.run(msg, client, bot);
+    console.log("[!] Mode procedure executed");
+
+    if (!request) return;
+
+    console.log("[!] Request detected");
+    try {
+        const response = await axios.post(config.backend, {
+            platform: 'whatsapp',
+            userId: sender_num,
+            timestamp: Date.now(),
+            ...request
+        });
+        
+        let responseProcedure = bot.modes.get(response.data.type);
+        if (!responseProcedure) return;
+
+        console.log("[!] Response procedure found");
+        bot.processCount++;
+        await utils.naturalDelay(bot);
+        await responseProcedure.respond(msg, client, bot, response.data);
+        console.log("[!] Response procedure executed");
+    }
+    
+    catch (error) {
+        console.log("[!] Error trying to get response:\n" + error);
+        await utils.naturalDelay(bot, 1, 2);
+        msg.react('⚠️');
+        return;
+    }
 });
 
 bot.loadModes();
