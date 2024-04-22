@@ -7,6 +7,14 @@ module.exports.run = async (msg, client, bot) => {
     return;
 }
 
+module.exports.respond = async (msg, client, bot, responseData) => {
+    console.log("[!] Running response procedure");
+
+    msg.reply("sample response");
+
+    return;
+}
+
 module.exports.desc = {
     name: "chat",
     aliases: [],
