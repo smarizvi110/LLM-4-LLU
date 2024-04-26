@@ -81,7 +81,7 @@ client.on('message_create', async msg => {
 
     console.log("[!] Request detected");
     try {
-        const response = await axios.post(config.backend, {
+        const response = await axios.post(config.backend + "get_response", {
             platform: 'whatsapp',
             userId: sender_num,
             timestamp: Date.now(),
