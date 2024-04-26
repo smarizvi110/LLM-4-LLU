@@ -29,6 +29,7 @@ const bot = {
     modes: null,
     processCount: 0,
     processHistory: [],
+    botMessages: [],
     
     loadModes: null,
 }
