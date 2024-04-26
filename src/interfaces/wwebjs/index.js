@@ -85,6 +85,7 @@ client.on('message_create', async msg => {
             platform: 'whatsapp',
             userId: sender_num,
             timestamp: Date.now(),
+            type: msg.type,
             ...request
         });
         
