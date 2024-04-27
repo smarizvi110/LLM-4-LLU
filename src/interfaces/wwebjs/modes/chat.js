@@ -4,13 +4,18 @@ const fs = require("fs");
 module.exports.run = async (msg, client, bot) => {
     console.log("[!] Running chat mode procedure");
 
-    return;
+    const data = {
+        type: "chat",
+        message: msg.body
+    }
+
+    return data;
 }
 
 module.exports.respond = async (msg, client, bot, responseData) => {
     console.log("[!] Running response procedure");
 
-    msg.reply("sample response");
+    await client.sendMessage(msg.from, responeData.message);
 
     return;
 }
