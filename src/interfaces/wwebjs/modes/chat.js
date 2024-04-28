@@ -15,7 +15,8 @@ module.exports.run = async (msg, client, bot) => {
 module.exports.respond = async (msg, client, bot, responseData) => {
     console.log("[!] Running response procedure");
 
-    await client.sendMessage(msg.from, responeData.message);
+    const response = await client.sendMessage(msg.from, responseData.message);
+    bot.messageHistory.push(response.id.id);
 
     return;
 }
