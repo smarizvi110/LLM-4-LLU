@@ -40,15 +40,27 @@ client.on('qr', qr => {
 });
 
 client.on('message_create', async msg => {
+    // utils.naturalDelay(bot, 1, 2);
+    // console.log(bot.messageHistory, msg.id.id);
+    // if (bot.messageHistory.includes(msg.id.id)) return;
+
+    // if ((await msg.getChat()).isGroup) return;
+
     sender_num = msg.author ? msg.author : msg.from;
     sender_num = sender_num.match(/(\d+)/g)[0];
 
+    const chat = await msg.getChat();
+
     console.log("[!] Received message from " + sender_num);
+    console.log("\t- Chat ID: " + chat.name);
     console.log("\t- Content: " + msg.body);
     console.log("\t- Type: " + msg.type);
     console.log("\t- Timestamp: " + msg.timestamp);
 
-    if ((config.whitelist.length && !config.whitelist.includes(sender_num))) return;
+    if (!chat.isGroup && config.whitelist.length && !config.whitelist.includes(sender_num)) return;
+    if (chat.isGroup && config.whitelist.length && !config.whitelist.includes(chat.name)) return;
+
+    if (msg.fromMe) return;
 
     if (msg.body == "!reload" && config.admins.includes(sender_num)) {
         bot.processCount = 1;
@@ -74,7 +86,7 @@ client.on('message_create', async msg => {
     console.log("[!] Mode procedure found");
     bot.processCount++;
     await utils.naturalDelay(bot);
-    const request = modeProcedure.run(msg, client, bot);
+    const request = await modeProcedure.run(msg, client, bot);
     console.log("[!] Mode procedure executed");
 
     if (!request) return;
@@ -84,6 +96,7 @@ client.on('message_create', async msg => {
         const response = await axios.post(config.backend + "get_response", {
             platform: 'whatsapp',
             userId: sender_num,
+            chatId: chat.isGroup ? chat.name : sender_num,
             timestamp: Date.now(),
             type: msg.type,
             ...request
