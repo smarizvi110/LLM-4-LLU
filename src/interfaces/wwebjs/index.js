@@ -101,15 +101,30 @@ client.on('message_create', async msg => {
             type: msg.type,
             ...request
         });
-        
-        let responseProcedure = bot.modes.get(response.data.type);
-        if (!responseProcedure) return;
 
-        console.log("[!] Response procedure found");
-        bot.processCount++;
-        await utils.naturalDelay(bot);
-        await responseProcedure.respond(msg, client, bot, response.data);
-        console.log("[!] Response procedure executed");
+        if (response.data.length == 1) {
+            let responseProcedure = bot.modes.get(response.data.type);
+            if (!responseProcedure) return;
+    
+            console.log("[!] Response procedure found");
+            bot.processCount++;
+            await utils.naturalDelay(bot);
+            await responseProcedure.respond(msg, client, bot, response.data);
+            console.log("[!] Response procedure executed");
+        } else {
+            console.log("[!] Multiple responses detected");
+            console.log(response);
+            for (let i = 0; i < response.data.length; i++) {
+                let responseProcedure = bot.modes.get(response.data[i].type);
+                if (!responseProcedure) continue;
+        
+                console.log("[!] Response procedure found");
+                bot.processCount++;
+                await utils.naturalDelay(bot);
+                await responseProcedure.respond(msg, client, bot, response.data[i]);
+                console.log("[!] Response procedure executed");
+            }
+        }
     }
     
     catch (error) {
